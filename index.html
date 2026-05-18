@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <title>Presupuesto - En una cabeza Monomarental</title>
+  </head>
+  <body>
+    <div id="app" class="roboto">
+
+      <!-- ============================================ -->
+      <!-- ESTADO 1: MODAL DE INICIO                    -->
+      <!-- Consigna + botón "Comenzar"                  -->
+      <!-- Se muestra al cargar la app                  -->
+      <!-- ============================================ -->
+      <div id="modal-inicio" class="modal disp">
+        <div class="modal-contenido">
+          <h1 class="modal-titulo">Un mes. Un sueldo. Muchas decisiones.</h1>
+          <p class="modal-texto">
+            Tenés 3 minutos para organizar el presupuesto de un mes.
+            El ingreso es fijo. Los gastos, no.
+          </p>
+          <p class="modal-texto">
+            Mientras decidís qué pagar y qué postergar, van a llegar
+            avisos que pueden modificar tu saldo sin que lo autorices.
+          </p>
+          <p class="modal-texto modal-texto-chico">
+            Podés salir en cualquier momento.
+          </p>
+          <button id="btn-comenzar" class="btn-principal" disabled>Comenzar</button>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- ESTADO 2: PANEL DE PRESUPUESTO               -->
+      <!-- Temporizador + saldo + tabla + toasts         -->
+      <!-- Es la pantalla principal de la experiencia   -->
+      <!-- ============================================ -->
+      <div id="panel-presupuesto" class="no-disp">
+
+        <!-- Barra superior: temporizador y saldo -->
+        <div id="barra-superior">
+          <div id="bloque-tiempo">
+            <span class="barra-label">Tiempo restante</span>
+            <span id="temporizador" class="barra-valor">3:00</span>
+          </div>
+          <div id="bloque-saldo">
+            <span class="barra-label">Saldo disponible</span>
+            <span id="saldo" class="barra-valor saldo-positivo">$450.000</span>
+          </div>
+        </div>
+
+        <!-- Botón de salida voluntaria -->
+        <button id="btn-salir" class="btn-salir" title="Salir de la experiencia">✕</button>
+
+        <!-- Tabla de rubros -->
+        <div id="tabla-contenedor">
+          <table id="tabla-rubros">
+            <thead>
+              <tr>
+                <th class="col-rubro">Rubro</th>
+                <th class="col-monto">Monto</th>
+                <th class="col-accion">Decisión</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-rubros">
+              <!-- Se llena dinámicamente desde main.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Contenedor de toasts (débitos automáticos del celular) -->
+        <div id="toast-container"></div>
+
+        <!-- Indicador de saldo negativo (aparece una sola vez) -->
+        <div id="alerta-saldo" class="no-disp">
+          <span>Saldo insuficiente</span>
+        </div>
+
+      </div>
+
+      <!-- ============================================ -->
+      <!-- ESTADO 3: MODAL DE CIERRE                    -->
+      <!-- Resumen de la sesión + link encuesta          -->
+      <!-- ============================================ -->
+      <div id="modal-cierre" class="modal no-disp">
+        <div class="modal-contenido">
+          <h1 class="modal-titulo">Se acabó el tiempo.</h1>
+
+          <div id="resumen">
+            <div class="resumen-fila">
+              <span class="resumen-label">Saldo final</span>
+              <span id="resumen-saldo" class="resumen-valor">$0</span>
+            </div>
+            <div class="resumen-fila">
+              <span class="resumen-label">Débitos automáticos recibidos</span>
+              <span id="resumen-debitos" class="resumen-valor">0</span>
+            </div>
+            <div class="resumen-fila">
+              <span class="resumen-label">Rubros pagados</span>
+              <span id="resumen-pagados" class="resumen-valor">0 de 8</span>
+            </div>
+            <div class="resumen-fila">
+              <span class="resumen-label">Rubros postergados</span>
+              <span id="resumen-postergados" class="resumen-valor">0</span>
+            </div>
+          </div>
+
+          <p class="modal-texto modal-texto-encuesta">
+            ¿Cómo te sentiste? Tu respuesta es anónima y nos ayuda a entender la experiencia.
+          </p>
+
+          <a id="btn-encuesta" class="btn-principal btn-encuesta" href="#" target="_blank">
+            Responder encuesta
+          </a>
+
+          <button id="btn-reiniciar" class="btn-secundario">
+            Reiniciar para el próximo visitante
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- DIÁLOGO DE CONFIRMACIÓN DE SALIDA            -->
+      <!-- Aparece si la persona presiona "Salir"       -->
+      <!-- ============================================ -->
+      <div id="dialogo-salir" class="modal no-disp">
+        <div class="modal-contenido modal-chico">
+          <p class="modal-texto">¿Querés terminar la experiencia?</p>
+          <div class="dialogo-botones">
+            <button id="btn-confirmar-salir" class="btn-principal btn-chico">Sí, terminar</button>
+            <button id="btn-cancelar-salir" class="btn-secundario btn-chico">Seguir</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="assets/js/datos-presupuesto.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
