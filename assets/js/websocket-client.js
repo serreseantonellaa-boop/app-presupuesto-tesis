@@ -54,10 +54,10 @@ function conectarWebSocket() {
 
     // --- GASTO: el celular avisa que descuente plata ---
     if (datos.tipo === 'gasto') {
-      // Llamar a la función de main.js que maneja los débitos
       recibirDebito({
         id: datos.id,
         origen: datos.origen,
+        mensaje: datos.mensaje,
         monto: datos.monto
       });
     }
@@ -85,7 +85,6 @@ function conectarWebSocket() {
 }
 
 // --- ENVIAR START AL CELULAR ---
-// Se llama desde main.js cuando la persona presiona "Comenzar".
 function enviarStart() {
   if (conectado && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({
@@ -97,7 +96,6 @@ function enviarStart() {
 }
 
 // --- ENVIAR STOP AL CELULAR ---
-// Se llama desde main.js cuando el temporizador llega a 0 o la persona sale.
 function enviarStop() {
   if (conectado && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({
@@ -109,7 +107,6 @@ function enviarStop() {
 }
 
 // --- ENVIAR RESET AL CELULAR ---
-// Se llama desde main.js cuando se reinicia para el próximo visitante.
 function enviarReset() {
   if (conectado && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({
@@ -120,8 +117,6 @@ function enviarReset() {
 }
 
 // --- ENVIAR RESULTADO DE SESIÓN ---
-// Se llama desde main.js cuando la experiencia termina.
-// El servidor guarda estos datos en resultados-sesiones.json.
 function enviarResultado(datosSesion) {
   if (conectado && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({
