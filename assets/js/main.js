@@ -324,6 +324,20 @@ function finalizarExperiencia(fueSalidaAnticipada) {
   sesion.congelado = true;
   sesion.salidaAnticipada = fueSalidaAnticipada;
   sesion.timestampFin = Date.now();
+   // Avisar al celular que pare
+  enviarStop();
+
+  // Guardar resultado en el servidor
+  enviarResultado({
+    saldoInicial: datosPresupuesto.saldoInicial,
+    saldoFinal: sesion.saldoActual,
+    tiempoTotal: datosPresupuesto.tiempoTotal,
+    rubros: sesion.rubros,
+    debitosRecibidos: sesion.debitosRecibidos,
+    salidaAnticipada: sesion.salidaAnticipada,
+    timestampInicio: sesion.timestampInicio,
+    timestampFin: sesion.timestampFin
+  });
 
   // Detener el temporizador
   if (sesion.intervaloTemporizador) {
@@ -378,6 +392,7 @@ function finalizarExperiencia(fueSalidaAnticipada) {
 
 function reiniciarApp() {
   // Resetear estado
+  enviarReset();
   sesion.saldoActual = 0;
   sesion.tiempoRestante = 0;
   sesion.rubros = [];
@@ -492,6 +507,8 @@ btnComenzar.addEventListener('click', function() {
   // Inicializar sesión
   sesion.saldoActual = datosPresupuesto.saldoInicial;
   sesion.timestampInicio = Date.now();
+  // Avisar al celular que arranque
+  enviarStart();
   saldoEl.textContent = formatearMonto(sesion.saldoActual);
 
   // Generar tabla de rubros
