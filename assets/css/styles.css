@@ -204,7 +204,7 @@ html, body {
 #panel-presupuesto {
   width: 100%;
   height: 100%;
-  padding: 24px 48px;
+  padding: 16px 48px 12px;
   display: flex;
   flex-direction: column;
 }
@@ -217,8 +217,8 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
-  margin-bottom: 24px;
+  padding: 8px 0 14px;
+  margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -229,8 +229,195 @@ html, body {
   gap: 4px;
 }
 
+/* --- Bloque izquierdo: avatar + tiempo + estrés --- */
+
+#bloque-izquierdo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#bloque-tiempo-estres {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- Avatar (provisorio, después va el modelo 3D) --- */
+
+#avatar {
+  width: 124px;
+  height: 124px; /* cuadrado: primer plano, cara, cuello y hombros */
+  border: 1px solid rgba(214, 0, 110, 0.35);
+  border-radius: 10px;
+  background: radial-gradient(ellipse at 50% 85%, rgba(214, 0, 110, 0.14), transparent 70%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  flex-shrink: 0;
+  transition: border-color 0.4s, background 0.4s;
+}
+
+/* Ilustración de la tesis como avatar */
+#avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 9px;
+}
+
+#avatar:has(img) {
+  padding: 0;
+  overflow: hidden;
+  border-width: 2px;
+}
+
+#avatar.avatar-nivel-0:has(img) { border-color: rgba(255, 255, 255, 0.25); }
+#avatar.avatar-nivel-1:has(img) { border-color: #f0a500; }
+#avatar.avatar-nivel-2:has(img) { border-color: #f07a00; }
+#avatar.avatar-nivel-3:has(img) {
+  border-color: #d6006e;
+  box-shadow: 0 0 14px rgba(214, 0, 110, 0.6);
+}
+
+#avatar svg {
+  stroke: #d6006e;
+  transition: stroke 0.4s;
+}
+
+#avatar.avatar-nivel-1 svg { stroke: #f0a500; }
+#avatar.avatar-nivel-2 svg { stroke: #f07a00; }
+#avatar.avatar-nivel-3 svg { stroke: #e74c3c; }
+
+#avatar.avatar-nivel-3 {
+  border-color: rgba(231, 76, 60, 0.6);
+  background: radial-gradient(ellipse at 50% 85%, rgba(231, 76, 60, 0.2), transparent 70%);
+}
+
+/* --- Barra de estrés --- */
+
+#bloque-estres {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#barra-estres {
+  display: flex;
+  gap: 3px;
+  width: 220px;
+}
+
+#barra-estres i {
+  flex: 1;
+  height: 10px;
+  border-radius: 2px;
+  background: #262626;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+#barra-estres i.lleno.seg-0,
+#barra-estres i.lleno.seg-1,
+#barra-estres i.lleno.seg-2 { background: #f0a500; }
+#barra-estres i.lleno.seg-3,
+#barra-estres i.lleno.seg-4,
+#barra-estres i.lleno.seg-5 { background: #f07a00; }
+#barra-estres i.lleno.seg-6,
+#barra-estres i.lleno.seg-7 { background: #e74c3c; }
+#barra-estres i.lleno.seg-8,
+#barra-estres i.lleno.seg-9 {
+  background: #d6006e;
+  box-shadow: 0 0 8px rgba(214, 0, 110, 0.8);
+}
+
+.nivel-estres {
+  font-size: 0.75em;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  min-width: 90px;
+}
+
+.nivel-estres.nivel-0 { color: rgba(255, 255, 255, 0.45); }
+.nivel-estres.nivel-1 { color: #f0a500; }
+.nivel-estres.nivel-2 { color: #f07a00; }
+.nivel-estres.nivel-3 { color: #d6006e; }
+
+/* --- Botón de aspirina --- */
+
+.btn-aspirina {
+  align-self: flex-start;
+  background: #161616;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: border-color 0.2s, opacity 0.3s;
+}
+
+.btn-aspirina:hover {
+  border-color: #d6006e;
+}
+
+.btn-aspirina span {
+  color: #d6006e;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* Oculto pero reservando el lugar, así la barra no salta */
+.btn-aspirina.oculto {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* --- Pantalla de la aspirina (bloquea la planilla) --- */
+
+#overlay-aspirina {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+  z-index: 85;
+}
+
+.aspirina-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.aspirina-texto {
+  font-size: 1.4em;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.aspirina-cuenta {
+  font-size: 4em;
+  font-weight: 200;
+  color: #d6006e;
+  font-variant-numeric: tabular-nums;
+}
+
+.aspirina-sub {
+  font-size: 0.9em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 #bloque-saldo {
   text-align: right;
+  margin-right: 40px; /* deja lugar a la X de salir */
 }
 
 .barra-label {
@@ -245,6 +432,46 @@ html, body {
   font-size: 2.2em;
   font-weight: 200;
   letter-spacing: 1px;
+}
+
+/* --- Detalle del ingreso debajo del saldo --- */
+
+.ingresos-detalle {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.ingresos-detalle b {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ingresos-detalle b.a-cobrar {
+  color: #f0a500;
+}
+
+.linea-a-cobrar {
+  color: rgba(240, 165, 0, 0.7);
+}
+
+/* Freelance recién cobrado: verde */
+.ingresos-detalle b.recien-cobrado {
+  color: #2ecc71;
+}
+
+/* --- Toast de plata que entra (freelance) --- */
+
+.toast.toast-ingreso {
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-left: 3px solid #2ecc71;
+}
+
+.toast.toast-ingreso .toast-monto {
+  color: #2ecc71;
 }
 
 /* --- Estados del saldo --- */
@@ -278,7 +505,7 @@ html, body {
 #tabla-contenedor {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 #tabla-rubros {
@@ -292,7 +519,7 @@ html, body {
   color: rgba(255, 255, 255, 0.35);
   text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 12px 16px;
+  padding: 9px 16px;
   text-align: left;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -322,7 +549,7 @@ html, body {
 }
 
 #tabla-rubros tbody td {
-  padding: 16px;
+  padding: 8px 16px;
   font-size: 0.95em;
   font-weight: 300;
   vertical-align: middle;
@@ -388,6 +615,24 @@ html, body {
   border-color: rgba(255, 255, 255, 0.25);
 }
 
+/* --- Opción C: el saldo no alcanza, el pago sale con tarjeta --- */
+
+.btn-pagar.tarjeta {
+  background: rgba(231, 76, 60, 0.15);
+  color: #ff6b5b;
+  border-color: rgba(231, 76, 60, 0.45);
+}
+
+.btn-pagar.tarjeta:hover {
+  background: rgba(231, 76, 60, 0.3);
+}
+
+.btn-pagar.tarjeta.activo {
+  background: #e74c3c;
+  color: #ffffff;
+  border-color: #e74c3c;
+}
+
 /* --- Fila con débito automático --- */
 
 .fila-debito {
@@ -404,6 +649,67 @@ html, body {
   text-decoration: line-through;
 }
 
+/* --- Fuente del dato debajo del nombre del rubro --- */
+
+.td-fuente {
+  display: inline;
+  font-size: 0.72em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.3);
+  margin-left: 10px;
+}
+
+/* --- Fila del cuidado (se paga con tiempo) --- */
+
+.fila-cuidado {
+  background: rgba(214, 0, 110, 0.06);
+  border-top: 1px solid rgba(214, 0, 110, 0.35) !important;
+  border-bottom: 1px solid rgba(214, 0, 110, 0.35) !important;
+}
+
+#tabla-rubros tbody tr.fila-cuidado:hover {
+  background: rgba(214, 0, 110, 0.06);
+}
+
+.fila-cuidado .td-monto {
+  color: #d6006e;
+}
+
+/* Texto, no botón: sin borde ni fondo, para que no invite a tocarlo */
+.etiqueta-tiempo {
+  display: inline-block;
+  color: #d6006e;
+  font-size: 0.85em;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  cursor: default;
+}
+
+/* --- Pie de la tabla: Por pagar --- */
+
+#pie-tabla {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 16px 0;
+}
+
+.por-pagar-label {
+  font-size: 0.9em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.por-pagar-valor {
+  font-size: 1.4em;
+  font-weight: 400;
+  color: #f0a500;
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- Fila congelada (cuando termina el tiempo) --- */
 
 .fila-congelada {
@@ -418,7 +724,7 @@ html, body {
 #toast-container {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  left: 24px;
   display: flex;
   flex-direction: column-reverse;
   gap: 8px;
@@ -441,7 +747,7 @@ html, body {
 
   /* Animación de entrada */
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateX(-20px);
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
@@ -452,7 +758,7 @@ html, body {
 
 .toast.ocultar {
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateX(-20px);
   transition: opacity 0.25s ease-in, transform 0.25s ease-in;
 }
 
@@ -465,6 +771,202 @@ html, body {
 .toast-monto {
   font-weight: 500;
   color: #e74c3c;
+}
+
+/* ========================================
+   NOTIFICACIONES ESTILO WINDOWS 11
+   (llegan desde el celular vía WebSocket)
+   Representan las notificaciones del teléfono
+   invadiendo la pantalla de la notebook.
+   ======================================== */
+
+#win-noti-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  z-index: 90;
+  width: 340px;
+  pointer-events: none;
+}
+
+.win-noti {
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  background: #2b2b2b;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  pointer-events: auto;
+  cursor: default;
+
+  /* Animación de entrada desde la derecha */
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.win-noti.mostrar {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.win-noti.ocultar {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+/* --- Partes de la notificación --- */
+
+.wn-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 0;
+  font-size: 12px;
+  color: #bbb;
+}
+
+.wn-mini {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.wn-x {
+  margin-left: auto;
+  opacity: 0.6;
+  font-size: 12px;
+  white-space: pre;
+}
+
+.wn-cuerpo {
+  display: flex;
+  gap: 12px;
+  padding: 8px 14px 14px;
+  align-items: flex-start;
+}
+
+.wn-textos {
+  flex: 1;
+  min-width: 0;
+}
+
+.wn-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.wn-tit {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.wn-msg {
+  font-size: 13px;
+  line-height: 1.35;
+  color: #d0d0d0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.wn-monto {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff5b4b;
+  letter-spacing: -0.5px;
+  margin: 2px 0;
+}
+
+.wn-reply {
+  margin: 0 14px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2a3942;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #8696a0;
+}
+
+.wn-sel {
+  margin: 0 14px 10px;
+  background: #3a3a3a;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wn-acc {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.wn-btn {
+  flex: 1;
+  text-align: center;
+  padding: 7px 0;
+  border-radius: 4px;
+  font-size: 13px;
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.wn-btn.wn-pri {
+  background: #1A73E8;
+}
+
+/* --- Piel de cada app --- */
+
+/* WhatsApp de escritorio */
+.wf-whatsapp { background: #202c33; color: #e9edef; }
+.wf-whatsapp .wn-head { color: #8696a0; }
+.wf-whatsapp .wn-msg { color: #d1d7db; }
+
+/* Galicia: oscura, con el monto en rojo (opción B) */
+.wf-banco { background: #2b2b2b; }
+
+/* Obra social */
+.wf-obrasocial { background: #0f2f2c; color: #e6f4f2; }
+.wf-obrasocial .wn-head { color: #80cbc4; }
+.wf-obrasocial .wn-msg { color: #b2dfdb; }
+
+/* Gmail: oscura como el resto */
+.wf-gmail { background: #2b2b2b; }
+.wf-gmail .wn-btn { color: #8ab4f8; font-weight: 500; }
+
+/* Calendario: gris oscuro con "Posponer" */
+.wf-calendario { background: #2b2b2b; }
+
+/* Pulsación sutil cuando es un gasto */
+.win-noti.es-gasto {
+  animation: winNotiPulso 0.6s ease-in-out 0.4s;
+}
+
+@keyframes winNotiPulso {
+  0%   { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 0 0 rgba(231, 76, 60, 0.4); }
+  50%  { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(231, 76, 60, 0); }
+  100% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 0 0 rgba(231, 76, 60, 0); }
 }
 
 /* ========================================
@@ -549,6 +1051,53 @@ html, body {
   color: #ffffff;
 }
 
+.resumen-rojo {
+  color: #ff6b5b;
+}
+
+/* --- Lista de lo que quedó sin pagar --- */
+
+#bloque-pendientes {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.pendientes-titulo {
+  font-size: 1em;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+#lista-pendientes {
+  list-style: none;
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+#lista-pendientes li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: 0.9em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pendiente-monto {
+  white-space: nowrap;
+}
+
+.pendientes-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  font-weight: 500;
+  color: #ff6b5b;
+}
+
 /* ========================================
    SCROLLBAR PERSONALIZADO
    ======================================== */
@@ -568,4 +1117,454 @@ html, body {
 
 #tabla-contenedor::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
+}
+
+/* --- Cierre compacto: entra completo en pantallas de 768 px de alto --- */
+
+#modal-cierre .modal-contenido {
+  padding: 28px 40px;
+  max-height: 96vh;
+  overflow-y: auto;
+}
+
+#modal-cierre .modal-titulo {
+  margin-bottom: 14px;
+}
+
+#modal-cierre #resumen {
+  padding: 8px 24px;
+}
+
+#modal-cierre .resumen-fila {
+  padding: 7px 0;
+}
+
+#modal-cierre #lista-pendientes li {
+  padding: 4px 0;
+}
+
+#modal-cierre .modal-texto-encuesta {
+  margin-top: 18px;
+  margin-bottom: 14px;
+}
+
+/* ========================================
+   LLAMADA ENTRANTE
+   Bloquea la planilla; solo se puede cortar.
+   ======================================== */
+
+#overlay-llamada {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.llamada {
+  width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  animation: llamadaEntra 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes llamadaEntra {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ll-top {
+  padding: 16px 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.ll-x {
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+.ll-cara {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  margin: 30px auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  font-weight: 500;
+  position: relative;
+}
+
+/* Ondas que laten mientras suena */
+.ll-cara::before,
+.ll-cara::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0;
+  animation: llamadaOnda 1.6s ease-out infinite;
+}
+
+.ll-cara::after {
+  animation-delay: 0.8s;
+}
+
+@keyframes llamadaOnda {
+  0%   { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+.ll-nom {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.ll-sub {
+  font-size: 14px;
+  margin-top: 6px;
+  opacity: 0.75;
+}
+
+.ll-mensaje {
+  margin: 18px 22px 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  text-align: left;
+  line-height: 1.45;
+}
+
+.ll-bot {
+  display: flex;
+  justify-content: center;
+  padding: 34px 0 30px;
+}
+
+.ll-b {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ll-c {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e53935;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+.ll-b:hover .ll-c {
+  transform: scale(1.08);
+}
+
+/* Cobranza: fría e impersonal */
+.ll-cobranza {
+  background: #1b1b1f;
+  color: #fff;
+  border: 1px solid #3a2a2a;
+}
+
+.ll-cobranza .ll-cara {
+  background: #2a2a30;
+  color: #e53935;
+}
+
+.ll-cobranza .ll-mensaje {
+  background: #3a1212;
+  color: #ff8a80;
+}
+
+/* Amiga: videollamada de WhatsApp */
+.ll-amiga {
+  background: #0b141a;
+  color: #e9edef;
+}
+
+.ll-amiga .ll-top {
+  color: #8696a0;
+}
+
+.ll-amiga .ll-cara {
+  background: #6a4c93;
+  color: #25D366;
+}
+
+.ll-amiga .ll-cara span {
+  color: #fff;
+}
+
+.ll-amiga .ll-mensaje {
+  background: #202c33;
+  color: #d1d7db;
+}
+
+.ll-amiga .ll-mensaje b {
+  color: #25D366;
+  font-weight: 500;
+}
+
+/* ========================================
+   GLITCH
+   Se dispara al cambiar de color la barra de estrés.
+   Desplazamiento, separación de color y franjas.
+   Sin destellos de luz (fotosensibilidad).
+   ======================================== */
+
+#panel-presupuesto.glitch-corto {
+  animation: glitchSacudon 0.15s steps(2) infinite;
+  filter: drop-shadow(2px 0 0 rgba(255, 0, 90, 0.55)) drop-shadow(-2px 0 0 rgba(0, 220, 255, 0.45));
+}
+
+#panel-presupuesto.glitch-medio {
+  animation: glitchSacudon 0.12s steps(2) infinite;
+  filter: drop-shadow(4px 0 0 rgba(255, 0, 90, 0.6)) drop-shadow(-4px 0 0 rgba(0, 220, 255, 0.5)) blur(0.6px);
+}
+
+#panel-presupuesto.glitch-fuerte {
+  animation: glitchFuerte 0.14s steps(2) infinite;
+  filter: drop-shadow(8px 0 0 rgba(255, 0, 90, 0.65)) drop-shadow(-8px 0 0 rgba(0, 220, 255, 0.55)) blur(1.2px);
+}
+
+@keyframes glitchSacudon {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-3px, 1px); }
+  100% { transform: translate(3px, -1px); }
+}
+
+@keyframes glitchFuerte {
+  0%   { transform: translate(0, 0) skewX(0deg); }
+  33%  { transform: translate(-10px, 3px) skewX(-2deg); }
+  66%  { transform: translate(9px, -2px) skewX(1.5deg); }
+  100% { transform: translate(-4px, 0) skewX(0deg); }
+}
+
+#capa-glitch {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 95;
+  overflow: hidden;
+}
+
+/* Franjas: distorsionan lo que tienen debajo, sin cambiar el brillo */
+#capa-glitch i {
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  backdrop-filter: hue-rotate(90deg) saturate(2.5) blur(1px);
+  -webkit-backdrop-filter: hue-rotate(90deg) saturate(2.5) blur(1px);
+  border-top: 1px solid rgba(214, 0, 110, 0.35);
+}
+
+#capa-glitch.glitch-fuerte i {
+  backdrop-filter: hue-rotate(160deg) saturate(3) blur(2px);
+  -webkit-backdrop-filter: hue-rotate(160deg) saturate(3) blur(2px);
+}
+
+/* ========================================
+   DEGRADACIÓN PERMANENTE POR NIVEL
+   Cuanto más estrés, más cuesta leer la planilla.
+   ======================================== */
+
+#app.nivel-2 #tabla-contenedor {
+  filter: blur(0.35px);
+}
+
+#app.nivel-3 #tabla-contenedor {
+  filter: blur(0.7px);
+}
+
+/* Viñeta fucsia que late despacio en Crítico (ciclo de 3 segundos) */
+#app.nivel-3 #panel-presupuesto::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  box-shadow: inset 0 0 140px rgba(214, 0, 110, 0.35);
+  animation: vinetaLate 3s ease-in-out infinite;
+}
+
+@keyframes vinetaLate {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* ========================================
+   AVISO DEL MÁXIMO: tomar la aspirina
+   ======================================== */
+
+#overlay-maximo {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 0, 6, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  z-index: 88;
+}
+
+.maximo-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.maximo-titulo {
+  font-size: 2.4em;
+  font-weight: 300;
+  color: #d6006e;
+}
+
+.maximo-sub {
+  font-size: 1.1em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.maximo-btn {
+  margin-top: 14px;
+  padding: 14px 34px;
+  border-radius: 6px;
+  border: 1px solid #d6006e;
+  background: #d6006e;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.maximo-btn:hover {
+  background: #b0005a;
+}
+
+/* ========================================
+   MAIL URGENTE DEL EOE (aspecto de Gmail, oscuro)
+   ======================================== */
+
+#overlay-mail {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.mail {
+  width: 540px;
+  background: #2b2b2b;
+  border-radius: 12px;
+  padding: 22px 26px 26px;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  color: #e8eaed;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  animation: llamadaEntra 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mail-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #bdc1c6;
+}
+
+.mail-ic {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.mail-urgente {
+  margin-left: auto;
+  background: #5c2b29;
+  color: #f28b82;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.mail-asunto {
+  font-size: 22px;
+  font-weight: 400;
+  margin: 18px 0 16px;
+}
+
+.mail-de {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mail-av {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #1a73e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.mail-nombre {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mail-para {
+  font-size: 12px;
+  color: #9aa0a6;
+}
+
+.mail-cuerpo {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 18px 0 24px;
+  color: #d4d4d4;
+}
+
+.mail-btn {
+  background: #8ab4f8;
+  color: #202124;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mail-btn:hover {
+  background: #aecbfa;
 }

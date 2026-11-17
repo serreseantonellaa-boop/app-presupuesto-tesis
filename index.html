@@ -22,10 +22,10 @@
       <!-- ============================================ -->
       <div id="modal-inicio" class="modal disp">
         <div class="modal-contenido">
-          <h1 class="modal-titulo">Un mes. Un sueldo. Muchas decisiones.</h1>
+          <h1 class="modal-titulo">Un mes. Tres ingresos. Muchas decisiones.</h1>
           <p class="modal-texto">
             Tenés 2 minutos para organizar el presupuesto de un mes.
-            El ingreso es fijo. Los gastos, no.
+            El ingreso no llega todo junto. Los gastos, sí.
           </p>
           <p class="modal-texto">
             Mientras decidís qué pagar y qué postergar, van a llegar
@@ -45,20 +45,43 @@
       <!-- ============================================ -->
       <div id="panel-presupuesto" class="no-disp">
 
-        <!-- Barra superior: temporizador y saldo -->
+        <!-- Barra superior: cuerpo + tiempo + estrés (izquierda), saldo (derecha) -->
         <div id="barra-superior">
-          <div id="bloque-tiempo">
-            <span class="barra-label">Tiempo restante</span>
-            <span id="temporizador" class="barra-valor">3:00</span>
+          <div id="bloque-izquierdo">
+
+            <!-- Avatar: lugar reservado para el modelo 3D (Three.js). -->
+            <!-- Por ahora muestra una figura de línea que cambia según el nivel. -->
+            <div id="avatar" class="avatar-nivel-0"></div>
+
+            <div id="bloque-tiempo-estres">
+              <div id="bloque-tiempo">
+                <span class="barra-label">Tiempo restante</span>
+                <span id="temporizador" class="barra-valor">2:00</span>
+              </div>
+
+              <!-- Barra de estrés: 10 segmentos, sube con cada notificación -->
+              <div id="bloque-estres">
+                <span class="barra-label">Estrés</span>
+                <div id="barra-estres"></div>
+                <span id="nivel-estres" class="nivel-estres">Normal</span>
+              </div>
+
+              <!-- Autocuidado: aparece desde Cansancio, 2 usos por sesión -->
+              <button id="btn-aspirina" class="btn-aspirina oculto">
+                Tomar una aspirina <span id="aspirinas-restantes">2</span>
+              </button>
+            </div>
           </div>
           <div id="bloque-saldo">
-            <span class="barra-label">Saldo disponible</span>
-            <span id="saldo" class="barra-valor saldo-positivo">$450.000</span>
+            <span id="saldo-label" class="barra-label">Saldo disponible</span>
+            <span id="saldo" class="barra-valor saldo-positivo">$1.200.000</span>
+            <!-- De dónde sale el ingreso. Se llena desde main.js -->
+            <div id="ingresos-detalle" class="ingresos-detalle"></div>
           </div>
         </div>
 
         <!-- Botón de salida voluntaria -->
-        <button id="btn-salir" class="btn-salir" title="Salir de la experiencia">✕</button>
+        <button id="btn-salir" class="btn-salir" title="Salir de la experiencia">&#10005;</button>
 
         <!-- Tabla de rubros -->
         <div id="tabla-contenedor">
@@ -74,10 +97,79 @@
               <!-- Se llena dinámicamente desde main.js -->
             </tbody>
           </table>
+
+          <!-- Suma de lo que todavía no se pagó (pendiente + postergado) -->
+          <div id="pie-tabla">
+            <span class="por-pagar-label">Por pagar</span>
+            <span id="por-pagar" class="por-pagar-valor">$0</span>
+          </div>
         </div>
 
         <!-- Contenedor de toasts (débitos automáticos del celular) -->
         <div id="toast-container"></div>
+
+        <!-- Contenedor de notificaciones estilo Windows 11 -->
+        <!-- Acá aparecen TODAS las notificaciones del celular como popups -->
+        <div id="win-noti-container"></div>
+
+        <!-- Pantalla de autocuidado: bloquea la planilla 5 segundos -->
+        <div id="overlay-aspirina" class="no-disp">
+          <div class="aspirina-contenido">
+            <span class="aspirina-texto">Tomando una aspirina</span>
+            <span id="aspirina-cuenta" class="aspirina-cuenta">5</span>
+            <span class="aspirina-sub">El reloj sigue corriendo.</span>
+          </div>
+        </div>
+
+        <!-- Llamada entrante: bloquea la planilla hasta que se corta -->
+        <div id="overlay-llamada" class="no-disp">
+          <div id="llamada" class="llamada">
+            <div class="ll-top"><span id="ll-encabezado"></span><span class="ll-x">✕</span></div>
+            <div id="ll-cara" class="ll-cara"></div>
+            <div id="ll-nombre" class="ll-nom"></div>
+            <div id="ll-sub" class="ll-sub"></div>
+            <div id="ll-mensaje" class="ll-mensaje"></div>
+            <div class="ll-bot">
+              <button id="btn-cortar" class="ll-b">
+                <span class="ll-c"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 14.5c5-4.6 13-4.6 18 0l-2.4 2.6-3.6-1.4V13c-2-.7-4-.7-6 0v2.7l-3.6 1.4z" fill="#fff"/></svg></span>
+                <span id="ll-boton"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mail urgente del EOE: una sola opción -->
+        <div id="overlay-mail" class="no-disp">
+          <div class="mail">
+            <div class="mail-top">
+              <img src="assets/imgs/icono-gmail.svg" alt="" class="mail-ic" />
+              <span>Gmail</span>
+              <span class="mail-urgente">Importante</span>
+            </div>
+            <div class="mail-asunto" id="mail-asunto"></div>
+            <div class="mail-de">
+              <div class="mail-av">E</div>
+              <div>
+                <div class="mail-nombre" id="mail-de"></div>
+                <div class="mail-para">para mí · ahora</div>
+              </div>
+            </div>
+            <p class="mail-cuerpo" id="mail-cuerpo"></p>
+            <button id="btn-mail" class="mail-btn"></button>
+          </div>
+        </div>
+
+        <!-- Máximo de estrés: hay que tomar la aspirina para seguir -->
+        <div id="overlay-maximo" class="no-disp">
+          <div class="maximo-contenido">
+            <span class="maximo-titulo">No podés seguir así.</span>
+            <span class="maximo-sub">Tomá una aspirina para continuar.</span>
+            <button id="btn-tomar-aspirina" class="maximo-btn">Tomar la aspirina</button>
+          </div>
+        </div>
+
+        <!-- Capa del glitch: franjas que se desplazan sobre la pantalla -->
+        <div id="capa-glitch" class="no-disp"></div>
 
         <!-- Indicador de saldo negativo (aparece una sola vez) -->
         <div id="alerta-saldo" class="no-disp">
@@ -96,20 +188,30 @@
 
           <div id="resumen">
             <div class="resumen-fila">
-              <span class="resumen-label">Saldo final</span>
+              <span id="resumen-saldo-label" class="resumen-label">Saldo final</span>
               <span id="resumen-saldo" class="resumen-valor">$0</span>
             </div>
             <div class="resumen-fila">
-              <span class="resumen-label">Débitos automáticos recibidos</span>
-              <span id="resumen-debitos" class="resumen-valor">0</span>
+              <span class="resumen-label">Pagado con tarjeta</span>
+              <span id="resumen-tarjeta" class="resumen-valor">Nada</span>
+            </div>
+            <div class="resumen-fila">
+              <span class="resumen-label">Débitos automáticos</span>
+              <span id="resumen-debitos" class="resumen-valor">Ninguno</span>
             </div>
             <div class="resumen-fila">
               <span class="resumen-label">Rubros pagados</span>
-              <span id="resumen-pagados" class="resumen-valor">0 de 8</span>
+              <span id="resumen-pagados" class="resumen-valor">0 de 0</span>
             </div>
-            <div class="resumen-fila">
-              <span class="resumen-label">Rubros postergados</span>
-              <span id="resumen-postergados" class="resumen-valor">0</span>
+          </div>
+
+          <!-- Lo que quedó sin pagar, rubro por rubro -->
+          <div id="bloque-pendientes">
+            <h2 class="pendientes-titulo">Quedó sin pagar</h2>
+            <ul id="lista-pendientes"></ul>
+            <div class="pendientes-total">
+              <span>Total</span>
+              <span id="total-pendientes">$0</span>
             </div>
           </div>
 

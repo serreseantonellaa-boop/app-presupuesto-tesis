@@ -11,7 +11,9 @@
 //   - "resultado"   → manda los datos de la sesión para guardar en JSON
 //
 // RECIBE:
-//   - "gasto"       → el celular avisa que hay un débito automático
+//   - "gasto"        → el celular avisa que hay un débito automático
+//   - "notificacion" → el celular envía TODAS sus notificaciones para
+//                       mostrarlas como popups estilo Windows 11
 // =============================================================
 
 // --- CONFIGURACIÓN ---
@@ -60,6 +62,13 @@ function conectarWebSocket() {
         mensaje: datos.mensaje,
         monto: datos.monto
       });
+    }
+
+    // --- NOTIFICACION: el celular envía una notificación para mostrar en pantalla ---
+    // Esto incluye TODAS las notificaciones (gastos y no gastos).
+    // Se muestran como popups estilo Windows 11 sobre la pantalla de presupuesto.
+    if (datos.tipo === 'notificacion') {
+      mostrarNotificacionWindows(datos);
     }
 
     // --- IDENTIFICADO: confirmación del servidor ---
