@@ -71,6 +71,11 @@ function conectarWebSocket() {
       mostrarNotificacionWindows(datos);
     }
 
+    // --- LLAMADA: el celular avisa que la persona colgó ---
+    if (datos.tipo === 'llamada' && datos.estado === 'cortada') {
+      llamadaCortadaEnCelular(datos.quien);
+    }
+
     // --- IDENTIFICADO: confirmación del servidor ---
     if (datos.tipo === 'identificado') {
       console.log('Servidor confirmó:', datos.mensaje);
@@ -133,6 +138,14 @@ function enviarResultado(datosSesion) {
       sesion: datosSesion
     }));
     console.log('Resultado de sesión enviado al servidor');
+  }
+}
+
+// --- LLAMADA EN EL CELULAR ---
+function enviarLlamada(datos) {
+  if (conectado && ws.readyState === WebSocket.OPEN) {
+    datos.tipo = 'llamada';
+    ws.send(JSON.stringify(datos));
   }
 }
 

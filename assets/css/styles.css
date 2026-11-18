@@ -1700,3 +1700,49 @@ html, body {
   91% { transform: translate(-2px, -1px); }
   93%, 100% { transform: none; }
 }
+
+/* ========================================
+   CARTEL: LLAMADA EN EL CELULAR
+   ======================================== */
+#overlay-celular {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.celular-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.celular-icono {
+  animation: celularVibra 0.9s steps(2) infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes celularVibra {
+  0%, 60%, 100% { transform: translateX(0) rotate(0); }
+  10% { transform: translateX(-3px) rotate(-4deg); }
+  20% { transform: translateX(3px) rotate(4deg); }
+  30% { transform: translateX(-3px) rotate(-4deg); }
+  40% { transform: translateX(3px) rotate(4deg); }
+}
+
+.celular-titulo {
+  font-size: 2.2em;
+  font-weight: 300;
+}
+
+.celular-sub {
+  font-size: 1.15em;
+  font-weight: 300;
+  color: #ff1fb4;
+}

@@ -275,16 +275,23 @@ let datosPresupuesto = {
       nombre: "Amiga",
       sub: "Te está llamando…",
       mensaje: "holaa atendé que te tengo que contar algo 😂",
-      boton: "Rechazar"
+      boton: "Rechazar",
+      // Tono de llamada de WhatsApp (Meta), recortado para sonar en loop
+      sonido: "assets/sounds/llamada-amiga.mp3",
+      // Sonido de cortar la llamada de WhatsApp (Meta)
+      sonidoCortar: "assets/sounds/llamada-amiga-cortar.mp3"
     },
     {
       quien: "cobranza",
       segundo: 85,
-      encabezado: "Videollamada entrante",
+      // Suena en el celular: la notebook muestra un cartel y espera
+      // a que la persona cuelgue en el teléfono.
+      dispositivo: "celular",
       nombre: "Estudio de Cobranzas",
       sub: "Número desconocido",
-      mensaje: "",   // sin texto extra (decidido 2026-11-15)
-      boton: "Colgar"
+      // Tono de llamada (archivo en la app del celular). Mientras no
+      // esté, el celular solo vibra.
+      sonido: "assets/sounds/llamada-cobranza.mp3"
     }
   ],
 

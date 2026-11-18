@@ -1047,6 +1047,11 @@ function revisarLlamadas() {
 function entrarLlamada(ll) {
   if (sesion.congelado) return;
 
+  if (ll.dispositivo === 'celular') {
+    entrarLlamadaCelular(ll);
+    return;
+  }
+
   sesion.llamadaActiva = { quien: ll.quien, inicio: Date.now() };
   sesion.bloqueado = true;
 
@@ -1076,11 +1081,41 @@ function entrarLlamada(ll) {
   overlayLlamada.classList.add('disp');
 
   sumarEstres(datosPresupuesto.estres.suma.llamada);
-  sonarLlamada(ll.quien);
+  sonarLlamada(ll);
+}
+
+// --- Llamada que suena en el celular ---
+// La notebook muestra un cartel y queda bloqueada hasta que el
+// celular avisa que la persona colgó. Si el celular no está
+// conectado, la llamada no se hace (no bloquea para siempre).
+let overlayCelular = document.getElementById('overlay-celular');
+
+function entrarLlamadaCelular(ll) {
+  if (!conectado) {
+    sesion.llamadas.push({ quien: ll.quien, segundosHastaCortar: null, sinCelular: true });
+    return;
+  }
+  sesion.llamadaActiva = { quien: ll.quien, inicio: Date.now(), enCelular: true };
+  sesion.bloqueado = true;
+  overlayCelular.classList.remove('no-disp');
+  overlayCelular.classList.add('disp');
+  sumarEstres(datosPresupuesto.estres.suma.llamada);
+  enviarLlamada({ estado: 'entrante', quien: ll.quien, nombre: ll.nombre, sub: ll.sub, sonido: ll.sonido });
+}
+
+// La llama websocket-client.js cuando el celular avisa que colgaron
+function llamadaCortadaEnCelular(quien) {
+  if (!sesion.llamadaActiva || !sesion.llamadaActiva.enCelular) return;
+  cortarLlamada();
 }
 
 function cortarLlamada() {
   if (!sesion.llamadaActiva) return;
+  // Sonido de cortar, si la llamada tiene uno
+  let config = datosPresupuesto.llamadas.find(function(l) { return l.quien === sesion.llamadaActiva.quien; });
+  if (config && config.sonidoCortar) {
+    new Audio(config.sonidoCortar).play().catch(function() {});
+  }
   sesion.llamadas.push({
     quien: sesion.llamadaActiva.quien,
     segundosHastaCortar: Math.round((Date.now() - sesion.llamadaActiva.inicio) / 100) / 10
@@ -1089,6 +1124,12 @@ function cortarLlamada() {
 }
 
 function cerrarLlamada() {
+  if (sesion.llamadaActiva && sesion.llamadaActiva.enCelular) {
+    // Si se cierra desde la notebook (fin del tiempo, reinicio), el celular deja de sonar
+    enviarLlamada({ estado: 'terminar', quien: sesion.llamadaActiva.quien });
+  }
+  overlayCelular.classList.remove('disp');
+  overlayCelular.classList.add('no-disp');
   sesion.llamadaActiva = null;
   sesion.bloqueado = false;
   callarLlamada();
@@ -1100,7 +1141,19 @@ btnCortar.addEventListener('click', cortarLlamada);
 
 // Ringtone provisorio con Web Audio (hasta tener el diseño sonoro).
 // Sale por los parlantes de la notebook.
-function sonarLlamada(quien) {
+function sonarLlamada(ll) {
+  let quien = ll.quien;
+
+  // Si la llamada tiene su propio archivo de sonido, suena en loop
+  if (ll.sonido) {
+    let audio = new Audio(ll.sonido);
+    audio.loop = true;
+    audio.volume = 0.9;
+    audio.play().catch(function() {});
+    audioLlamada = { archivo: audio };
+    return;
+  }
+
   try {
     let ctx = new (window.AudioContext || window.webkitAudioContext)();
     let tonos = quien === 'cobranza' ? [440, 480] : [784, 988];
@@ -1130,6 +1183,12 @@ function sonarLlamada(quien) {
 
 function callarLlamada() {
   if (!audioLlamada) return;
+  if (audioLlamada.archivo) {
+    audioLlamada.archivo.pause();
+    audioLlamada.archivo.currentTime = 0;
+    audioLlamada = null;
+    return;
+  }
   clearInterval(audioLlamada.intervalo);
   audioLlamada.oscs.forEach(function(o) { try { o.stop(); } catch (e) {} });
   audioLlamada.ctx.close();
