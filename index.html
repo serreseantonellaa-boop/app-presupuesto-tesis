@@ -15,6 +15,22 @@
   <body>
     <div id="app" class="roboto">
 
+      <!-- Filtros del temblor de línea del avatar (suave y fuerte) -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="temblor-avatar-suave">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1">
+            <animate attributeName="seed" values="1;4;7;2;9;5" dur="0.9s" repeatCount="indefinite" calcMode="discrete"/>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" scale="2"/>
+        </filter>
+        <filter id="temblor-avatar-fuerte">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3">
+            <animate attributeName="seed" values="3;8;1;6;2;9" dur="0.5s" repeatCount="indefinite" calcMode="discrete"/>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" scale="4"/>
+        </filter>
+      </svg>
+
       <!-- ============================================ -->
       <!-- ESTADO 1: MODAL DE INICIO                    -->
       <!-- Consigna + botón "Comenzar"                  -->
@@ -112,8 +128,30 @@
         <!-- Acá aparecen TODAS las notificaciones del celular como popups -->
         <div id="win-noti-container"></div>
 
-        <!-- Pantalla de autocuidado: bloquea la planilla 5 segundos -->
+        <!-- Pantalla de autocuidado: bloquea la planilla 5 segundos.
+             Animación cuadro a cuadro de la madre tomando la aspirina
+             (cuadros generados por Antonella, línea fucsia transparente). -->
         <div id="overlay-aspirina" class="no-disp">
+          <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+            <filter id="temblor-aspirina">
+              <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="1">
+                <animate attributeName="seed" values="1;4;7;2;9;5" dur="0.75s" repeatCount="indefinite" calcMode="discrete"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" scale="6">
+                <animate id="temblor-aspirina-escala" attributeName="scale" values="10;10;6;2" keyTimes="0;0.2;0.6;1" dur="5s" fill="freeze" begin="indefinite"/>
+              </feDisplacementMap>
+            </filter>
+          </svg>
+          <div class="aspirina-figura">
+            <img class="asp-gl asp-gl1" src="assets/imgs/aspirina/aspirina-1.webp" alt="" />
+            <img class="asp-gl asp-gl2" src="assets/imgs/aspirina/aspirina-1.webp" alt="" />
+            <img class="asp-gl asp-gl3" src="assets/imgs/aspirina/aspirina-1.webp" alt="" />
+            <img class="asp-cu asp-cu1" src="assets/imgs/aspirina/aspirina-1.webp" alt="" />
+            <img class="asp-cu asp-cu2" src="assets/imgs/aspirina/aspirina-2.webp" alt="" />
+            <img class="asp-cu asp-cu3" src="assets/imgs/aspirina/aspirina-3.webp" alt="" />
+            <img class="asp-cu asp-cu4" src="assets/imgs/aspirina/aspirina-4.webp" alt="" />
+            <img class="asp-cu asp-cu5" src="assets/imgs/aspirina/aspirina-5.webp" alt="" />
+          </div>
           <div class="aspirina-contenido">
             <span class="aspirina-texto">Tomando una aspirina</span>
             <span id="aspirina-cuenta" class="aspirina-cuenta">5</span>

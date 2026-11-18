@@ -381,11 +381,12 @@ html, body {
 #overlay-aspirina {
   position: fixed;
   inset: 0;
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(5, 5, 5, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   align-items: center;
   justify-content: center;
+  gap: 5%;
   z-index: 85;
 }
 
@@ -403,7 +404,7 @@ html, body {
 }
 
 .aspirina-cuenta {
-  font-size: 4em;
+  font-size: 4.5em;
   font-weight: 200;
   color: #d6006e;
   font-variant-numeric: tabular-nums;
@@ -1567,4 +1568,135 @@ html, body {
 
 .mail-btn:hover {
   background: #aecbfa;
+}
+
+/* ========================================
+   ANIMACIÓN DE LA ASPIRINA
+   Cinco cuadros en 5 segundos (dura lo mismo que la cuenta):
+   dolor (con glitch), pastilla, pastilla en la boca, agua, exhalación.
+   ======================================== */
+
+.aspirina-figura {
+  position: relative;
+  height: 88vh;
+  aspect-ratio: 2 / 3;
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+
+.aspirina-figura img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.aspirina-figura .asp-cu {
+  filter: url(#temblor-aspirina);
+}
+
+#overlay-aspirina .aspirina-contenido {
+  align-items: flex-start;
+  min-width: 220px;
+}
+
+.anim-on .asp-cu1 { animation: aspC1 5s linear forwards, aspSacudon 0.2s steps(2) 6; }
+.anim-on .asp-cu2 { animation: aspC2 5s linear forwards; }
+.anim-on .asp-cu3 { animation: aspC3 5s linear forwards; }
+.anim-on .asp-cu4 { animation: aspC4 5s linear forwards; }
+.anim-on .asp-cu5 { animation: aspC5 5s ease-out forwards; }
+
+@keyframes aspC1 { 0% { opacity: 0; } 3% { opacity: 1; } 19% { opacity: 1; } 23% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes aspC2 { 0%, 19% { opacity: 0; } 23% { opacity: 1; } 35% { opacity: 1; } 39% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes aspC3 { 0%, 35% { opacity: 0; } 39% { opacity: 1; } 51% { opacity: 1; } 55% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes aspC4 { 0%, 51% { opacity: 0; } 55% { opacity: 1; } 73% { opacity: 1; } 77% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes aspC5 {
+  0%, 73% { opacity: 0; transform: scale(1); }
+  77% { opacity: 1; transform: scale(1); }
+  92% { opacity: 1; transform: scale(1.015); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes aspSacudon {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-4px, 2px); }
+  100% { transform: translate(3px, -1px); }
+}
+
+/* Glitch del dolor: franjas que se desplazan y la línea desdoblada */
+.anim-on .asp-gl1 { animation: aspGlVisible 5s steps(1) forwards, aspGl1 0.36s steps(1) infinite; }
+.anim-on .asp-gl2 { animation: aspGlVisible 5s steps(1) forwards, aspGl2 0.28s steps(1) infinite; }
+.anim-on .asp-gl3 { animation: aspGlVisible 5s steps(1) forwards, aspGl3 0.44s steps(1) infinite; }
+
+@keyframes aspGlVisible { 0% { opacity: 1; } 24% { opacity: 0; } 100% { opacity: 0; } }
+
+@keyframes aspGl1 {
+  0% { clip-path: inset(18% 0 74% 0); transform: translateX(14px); }
+  33% { clip-path: inset(46% 0 46% 0); transform: translateX(-10px); }
+  66% { clip-path: inset(0 0 100% 0); }
+}
+
+@keyframes aspGl2 {
+  0% { clip-path: inset(30% 0 64% 0); transform: translateX(-18px); filter: drop-shadow(3px 0 0 #00e5ff); }
+  50% { clip-path: inset(62% 0 30% 0); transform: translateX(12px); filter: drop-shadow(-3px 0 0 #00e5ff); }
+}
+
+@keyframes aspGl3 {
+  0% { clip-path: inset(0 0 100% 0); }
+  25% { clip-path: inset(8% 0 86% 0); transform: translateX(9px); }
+  60% { clip-path: inset(52% 0 40% 0); transform: translateX(-22px); }
+}
+
+/* ========================================
+   AVATAR EN LÍNEA
+   Misma figura que la animación de la aspirina.
+   La línea tiembla siempre; parpadea en Normal y Cansancio;
+   en Dolor y Crítico se lleva la mano a la sien.
+   ======================================== */
+
+#avatar:has(.av-capa) {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  background: #000;
+  border-width: 2px;
+}
+
+#avatar .av-capa {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  opacity: 0;
+  filter: url(#temblor-avatar-suave);
+}
+
+#avatar.avatar-nivel-0 .av-abierto,
+#avatar.avatar-nivel-1 .av-abierto { opacity: 1; }
+
+/* Parpadeo: lo maneja main.js con intervalos irregulares, como uno real.
+   Mientras dura, se ve solo la capa de ojos cerrados. */
+#avatar.parpadea.avatar-nivel-0 .av-abierto,
+#avatar.parpadea.avatar-nivel-1 .av-abierto { opacity: 0; }
+#avatar.parpadea.avatar-nivel-0 .av-cerrado,
+#avatar.parpadea.avatar-nivel-1 .av-cerrado { opacity: 1; }
+
+#avatar.avatar-nivel-2 .av-dolor,
+#avatar.avatar-nivel-3 .av-dolor {
+  opacity: 1;
+  filter: url(#temblor-avatar-fuerte);
+}
+
+/* Crítico: además, un glitch corto cada tanto */
+#avatar.avatar-nivel-3 .av-dolor { animation: avatarGlitch 2.4s steps(1) infinite; }
+
+@keyframes avatarGlitch {
+  0%, 86% { transform: none; }
+  87% { transform: translate(-3px, 1px); clip-path: inset(20% 0 55% 0); }
+  89% { transform: translate(3px, 0); clip-path: none; }
+  91% { transform: translate(-2px, -1px); }
+  93%, 100% { transform: none; }
 }

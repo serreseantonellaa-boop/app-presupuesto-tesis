@@ -776,20 +776,18 @@ function actualizarEstresUI() {
   nivelEstresEl.textContent = datosPresupuesto.estres.niveles[nivel].nombre;
   nivelEstresEl.className = 'nivel-estres nivel-' + nivel;
 
-  // Avatar: ilustración de la tesis según el nivel.
-  // Si no hay imágenes configuradas, usa la figura de línea provisoria.
-  avatarEl.className = 'avatar-nivel-' + nivel;
-  let imagenes = datosPresupuesto.estres.avatarPorNivel;
-  if (imagenes && imagenes[nivel]) {
-    let actual = avatarEl.querySelector('img');
-    if (!actual || actual.getAttribute('src') !== imagenes[nivel]) {
-      avatarEl.innerHTML = '<img src="' + imagenes[nivel] + '" alt="">';
-    }
-  } else {
+  // Avatar: la madre en línea fucsia (mismo estilo que la animación de la aspirina).
+  // Normal y Cansancio: ojos abiertos con parpadeo. Dolor y Crítico: la mano en la sien.
+  // El nivel decide qué capa se ve y cuánto tiembla la línea (ver styles.css).
+  if (!avatarEl.querySelector('.av-abierto')) {
+    let fig = datosPresupuesto.estres.avatarLinea;
     avatarEl.innerHTML =
-      '<svg viewBox="0 0 70 104" width="70" height="104" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
-      posesAvatar[nivel] + '</svg>';
+      '<img class="av-capa av-abierto" src="' + fig.abierto + '" alt="">' +
+      '<img class="av-capa av-cerrado" src="' + fig.cerrado + '" alt="">' +
+      '<img class="av-capa av-dolor" src="' + fig.dolor + '" alt="">';
   }
+  let parpadeando = avatarEl.classList.contains('parpadea');
+  avatarEl.className = 'avatar-nivel-' + nivel + (parpadeando ? ' parpadea' : '');
 
   // Clase de nivel en toda la app (para los efectos de degradación que vienen después)
   appEl.classList.remove('nivel-0', 'nivel-1', 'nivel-2', 'nivel-3');
@@ -822,6 +820,13 @@ function tomarAspirina() {
   overlayAspirina.classList.remove('no-disp');
   overlayAspirina.classList.add('disp');
 
+  // Arrancar la animación desde el primer cuadro
+  overlayAspirina.classList.remove('anim-on');
+  void overlayAspirina.offsetWidth;
+  overlayAspirina.classList.add('anim-on');
+  let escalaTemblor = document.getElementById('temblor-aspirina-escala');
+  if (escalaTemblor && escalaTemblor.beginElement) escalaTemblor.beginElement();
+
   sesion.intervaloAspirina = setInterval(function() {
     cuenta--;
     aspirinaCuentaEl.textContent = cuenta;
@@ -843,6 +848,32 @@ function terminarAspirina() {
   overlayAspirina.classList.remove('disp');
   overlayAspirina.classList.add('no-disp');
 }
+
+// -------------------------------------------------------------
+// Parpadeo del avatar, con ritmo irregular como uno real:
+// cada 2 a 5 segundos, a veces doble. En Cansancio, más seguido
+// y con los ojos cerrados un poco más de tiempo.
+// -------------------------------------------------------------
+
+function programarParpadeo() {
+  let nivel = nivelActual();
+  let espera = nivel === 1 ? 1200 + Math.random() * 2300 : 2000 + Math.random() * 3200;
+  setTimeout(function() {
+    parpadear(nivelActual() === 1 ? 260 : 140);
+    // A veces, un segundo parpadeo seguido
+    if (Math.random() < 0.2) {
+      setTimeout(function() { parpadear(130); }, 330);
+    }
+    programarParpadeo();
+  }, espera);
+}
+
+function parpadear(duracion) {
+  avatarEl.classList.add('parpadea');
+  setTimeout(function() { avatarEl.classList.remove('parpadea'); }, duracion);
+}
+
+programarParpadeo();
 
 // Vuelve el estrés al valor inicial (al empezar y al reiniciar)
 function reiniciarEstres() {

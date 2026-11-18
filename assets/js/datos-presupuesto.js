@@ -216,12 +216,12 @@ let datosPresupuesto = {
     // Imagen del avatar para cada nivel (Normal, Cansancio, Dolor, Crítico).
     // Son miniaturas de las ilustraciones de la tesis (boceto1, 2 y 3).
     // Para usar una sola imagen fija, repetir la misma en los cuatro.
-    avatarPorNivel: [
-      "assets/imgs/avatar-boceto3.jpg",
-      "assets/imgs/avatar-boceto3.jpg",
-      "assets/imgs/avatar-boceto2.jpg",
-      "assets/imgs/avatar-boceto1.jpg"
-    ],
+    // Avatar en línea fucsia (cuadros generados por Antonella para la aspirina)
+    avatarLinea: {
+      abierto: "assets/imgs/aspirina/avatar-linea-0.webp",
+      cerrado: "assets/imgs/aspirina/avatar-linea-parpadeo.webp",   // misma cara, solo cambian los ojos
+      dolor: "assets/imgs/aspirina/avatar-linea-1.webp"
+    },
 
     // Desde qué valor empieza cada nivel
     niveles: [
