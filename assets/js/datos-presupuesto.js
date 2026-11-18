@@ -289,9 +289,11 @@ let datosPresupuesto = {
       dispositivo: "celular",
       nombre: "Estudio de Cobranzas",
       sub: "Número desconocido",
-      // Tono de llamada (archivo en la app del celular). Mientras no
-      // esté, el celular solo vibra.
-      sonido: "assets/sounds/llamada-cobranza.mp3"
+      // Tono de llamada y sonido de cortar (archivos en la app del
+      // celular). Tono: https://www.youtube.com/watch?v=mUoos58dRZg ,
+      // un ciclo de 2,3 s en loop. Cortar: el mismo de WhatsApp.
+      sonido: "assets/sounds/llamada-cobranza.mp3",
+      sonidoCortar: "assets/sounds/llamada-cortar.mp3"
     }
   ],
 

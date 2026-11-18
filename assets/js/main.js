@@ -1100,7 +1100,7 @@ function entrarLlamadaCelular(ll) {
   overlayCelular.classList.remove('no-disp');
   overlayCelular.classList.add('disp');
   sumarEstres(datosPresupuesto.estres.suma.llamada);
-  enviarLlamada({ estado: 'entrante', quien: ll.quien, nombre: ll.nombre, sub: ll.sub, sonido: ll.sonido });
+  enviarLlamada({ estado: 'entrante', quien: ll.quien, nombre: ll.nombre, sub: ll.sub, sonido: ll.sonido, sonidoCortar: ll.sonidoCortar });
 }
 
 // La llama websocket-client.js cuando el celular avisa que colgaron
@@ -1111,9 +1111,10 @@ function llamadaCortadaEnCelular(quien) {
 
 function cortarLlamada() {
   if (!sesion.llamadaActiva) return;
-  // Sonido de cortar, si la llamada tiene uno
+  // Sonido de cortar, si la llamada tiene uno. Si la llamada es en el
+  // celular, el sonido lo hace el celular.
   let config = datosPresupuesto.llamadas.find(function(l) { return l.quien === sesion.llamadaActiva.quien; });
-  if (config && config.sonidoCortar) {
+  if (config && config.sonidoCortar && !sesion.llamadaActiva.enCelular) {
     new Audio(config.sonidoCortar).play().catch(function() {});
   }
   sesion.llamadas.push({
